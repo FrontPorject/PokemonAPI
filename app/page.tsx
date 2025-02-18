@@ -60,7 +60,7 @@ export default function Home() {
   return (
     <>
     <div className="flex flex-col items-center gap-6" style={{opacity: openComponent ? 0.5 : 1 }}>
-      <Image alt="PokéAPI" src="https://raw.githubusercontent.com/PokeAPI/media/master/logo/pokeapi_256.png" width={200} height={200}/>
+      <Image className="w-[200px]" alt="PokéAPI" src="https://raw.githubusercontent.com/PokeAPI/media/master/logo/pokeapi_256.png" width="0" height="0" sizes="100vw" priority/>
 
     <section className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-7">
 
@@ -70,12 +70,12 @@ export default function Home() {
           <button key={select.name} onClick={()=>dispatch(setOpenComponent(true)) &&dispatch(setNameForModal(select.name))} disabled={openComponent}>
           {!openComponent ? <Tilt options={defaultOptions}  className="bg-gradient-to-r from-[#3461FF] to-[#8454EB] rounded-2xl flex flex-col items-center justify-center">
             <div className="m-4 p-5 flex flex-col items-center gap-4">
-              <Image className="w-[100px] h-[100px]" src={SpecificInfo[select.name]?.sprites?.other?.dream_world?.front_default as string || "https://img.icons8.com/?id=pn2cjKpf9DEt&format=png&color=000000"} alt={select.name} width={100} height={100}/>
+              <Image className="w-[100px] h-[100px]" src={SpecificInfo[select.name]?.sprites?.other?.dream_world?.front_default as string || "https://img.icons8.com/?id=pn2cjKpf9DEt&format=png&color=000000"} alt={select.name} width="0" height="0" sizes="100vw" priority/>
               <h3>{select.name}</h3>
             </div>
           </Tilt> : <div className="bg-gradient-to-r from-[#3461FF] to-[#8454EB] rounded-2xl flex flex-col items-center justify-center">
           <div className="m-4 p-5 flex flex-col items-center gap-4">
-              <Image className="w-[100px] h-[100px]" src={SpecificInfo[select.name]?.sprites?.other?.dream_world?.front_default as string || "https://img.icons8.com/?id=pn2cjKpf9DEt&format=png&color=000000"} alt={select.name} width={100} height={100}/>
+              <Image className="w-[100px] h-[100px]" src={SpecificInfo[select.name]?.sprites?.other?.dream_world?.front_default as string || "https://img.icons8.com/?id=pn2cjKpf9DEt&format=png&color=000000"} alt={select.name}width="0" height="0" sizes="100vw" priority/>
               <h3>{select.name}</h3>
             </div>
             </div>
