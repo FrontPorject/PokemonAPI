@@ -1,13 +1,19 @@
 "use client"
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import {useEffect} from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { AppDispatch, RootState} from "./store/index";
+import { setInfo, setSpecificInfo , setOpenComponent , setNameForModal } from "./store/redux-mainPage";
 import pokemonDetails from "./Pokemon"
 import { Tilt } from 'react-tilt'
+import Card from "./components/Card";
 
 export default function Home() {
 
-  const [data,setData] = useState<any>({});
-  const [info,setInfo] = useState<any>(null);
+  const dispatch = useDispatch<AppDispatch>();
+  const info = useSelector((state:RootState)=>state.apiInfo.info)
+  const SpecificInfo = useSelector((state:RootState)=>state.apiInfo.SpecificInfo)
+  const openComponent = useSelector((state:RootState)=>state.apiInfo.openComponent)
   
   const defaultOptions = {
     reverse:        false,
@@ -25,9 +31,9 @@ export default function Home() {
     async function fetchInfo() {
       try{
         const pokemonInfo = await pokemonDetails.api()
-        setInfo(pokemonInfo)
+        dispatch(setInfo(pokemonInfo));
 
-        pokemonInfo?.results.forEach((pokemon: any) => {
+        pokemonInfo?.results.forEach((pokemon: Record<string,string>) => {
           fetchDesirePokemon(pokemon.name);
         });
       }
@@ -38,15 +44,12 @@ export default function Home() {
 
     fetchInfo()
 
-  },[])
+  },[dispatch])
   async function fetchDesirePokemon(name:string) {
     try{
-      if (!data[name]) {
+      if (!SpecificInfo[name]) {
         const eachPokemonInfo = await pokemonDetails.apiEachInfo(name);
-        setData((prevData: any) => ({
-          ...prevData,
-          [name]: eachPokemonInfo,
-        }));
+        dispatch(setSpecificInfo({ name, data: eachPokemonInfo }));
       }
     }
     catch(error){
@@ -56,29 +59,33 @@ export default function Home() {
 
   return (
     <>
-    <div className="flex flex-col items-center gap-6">
+    <div className="flex flex-col items-center gap-6" style={{opacity: openComponent ? 0.5 : 1 }}>
       <Image alt="PokéAPI" src="https://raw.githubusercontent.com/PokeAPI/media/master/logo/pokeapi_256.png" width={200} height={200}/>
 
     <section className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-7">
 
-      {info?.results?.map((select:any)=>{ 
+      {info?.results?.map((select:Record<string,string>)=>{ 
           fetchDesirePokemon(select.name)
         return (
-          <button key={select.name}>
-          <Tilt options={defaultOptions}  className="bg-gradient-to-r from-[#2DF2FF] to-[#DDFF95] rounded-2xl flex flex-col items-center justify-center">
+          <button key={select.name} onClick={()=>dispatch(setOpenComponent(true)) &&dispatch(setNameForModal(select.name))} disabled={openComponent}>
+          {!openComponent ? <Tilt options={defaultOptions}  className="bg-gradient-to-r from-[#3461FF] to-[#8454EB] rounded-2xl flex flex-col items-center justify-center">
             <div className="m-4 p-5 flex flex-col items-center gap-4">
-              <Image className="w-[100px] h-[100px]" src={data[select.name]?.sprites?.other?.dream_world?.front_default || "https://img.icons8.com/?id=pn2cjKpf9DEt&format=png&color=000000"} alt={select.name} width={100} height={100}/>
+              <Image className="w-[100px] h-[100px]" src={SpecificInfo[select.name]?.sprites?.other?.dream_world?.front_default as string || "https://img.icons8.com/?id=pn2cjKpf9DEt&format=png&color=000000"} alt={select.name} width={100} height={100}/>
               <h3>{select.name}</h3>
             </div>
-          </Tilt>
+          </Tilt> : <div className="bg-gradient-to-r from-[#3461FF] to-[#8454EB] rounded-2xl flex flex-col items-center justify-center">
+          <div className="m-4 p-5 flex flex-col items-center gap-4">
+              <Image className="w-[100px] h-[100px]" src={SpecificInfo[select.name]?.sprites?.other?.dream_world?.front_default as string || "https://img.icons8.com/?id=pn2cjKpf9DEt&format=png&color=000000"} alt={select.name} width={100} height={100}/>
+              <h3>{select.name}</h3>
+            </div>
+            </div>
+            }
           </button>
         )
       })}
     </section>
     </div>
-
-
-
+    {openComponent && <Card/>}
     </>
   );
 }
