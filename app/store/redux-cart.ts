@@ -7,7 +7,7 @@ export interface CounterState {
 
 const initialState: CounterState = {
   value: 0,
-  items: JSON.parse(localStorage.getItem('items') || '')
+  items: JSON.parse(localStorage.getItem('items') || '[]')
 };
 
 export const counterSlice = createSlice({
