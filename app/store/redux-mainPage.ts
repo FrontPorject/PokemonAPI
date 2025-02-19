@@ -5,8 +5,9 @@ interface types {
     SpecificInfo: Record<string,{sprites?:Record<string,{dream_world:Record<string,{front_default?: string}>}>}>;
     openComponent: boolean;
     NameOfModal: string;
+    openCart: boolean;
   }
-const initialState : types = {info:null , SpecificInfo:{} , openComponent:false , NameOfModal:""}
+const initialState : types = {info:null , SpecificInfo:{} , openComponent:false , NameOfModal:"" , openCart:false}
 const AllInfoSlice = createSlice({
     name:'apiInfo',
     initialState: initialState,
@@ -24,9 +25,12 @@ const AllInfoSlice = createSlice({
         setNameForModal:(state,action)=>{
             state.NameOfModal = action.payload
         },
+        setOpenCart:(state,action)=>{
+            state.openCart = action.payload
+        },
 
     }
 
 });
-export const { setInfo, setSpecificInfo , setOpenComponent , setNameForModal} = AllInfoSlice.actions;
+export const { setInfo, setSpecificInfo , setOpenComponent , setNameForModal , setOpenCart} = AllInfoSlice.actions;
 export default AllInfoSlice;

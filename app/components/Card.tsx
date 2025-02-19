@@ -3,13 +3,14 @@ import { AppDispatch , RootState } from "../store/index";
 import { useSelector,useDispatch } from "react-redux";
 import { setOpenComponent } from "../store/redux-mainPage";
 import pokemonDetails from "../Pokemon"
+import { decrement, increment , reset, setCount } from '../store/redux-cart'
 import { useState } from "react";
 export default function Card(){
     const dispatch = useDispatch<AppDispatch>();
     const NameOfModal = useSelector((state:RootState)=>state.apiInfo.NameOfModal)
     const [details, setDetails] = useState<{sprites?:{other?:{dream_world?: {front_default?: string;};};};types?: {type: {name: string;};}[];} | null>(null);
-
-  
+    const counter = useSelector((state: RootState) => state.counter.value)
+    // const items = useSelector((state: RootState) => state.counter.items)
 
     fetchDesirePokemon(NameOfModal).then(data => {
         setDetails(data);
@@ -24,6 +25,13 @@ export default function Card(){
           console.error("ERROR `Can't fetch data`",error)
         }
     }
+    const saveCountOfProduct = () => {
+        dispatch(setCount({ name: NameOfModal, count: counter }));
+        dispatch(setOpenComponent(false))
+        // console.log(items)
+        dispatch(reset())
+    };
+
 
     return( 
         <div className="bg-white/0 shadow-lg ring-1 ring-black/5 backdrop-blur-3xl  fixed m-auto flex flex-col inset-0 rounded-lg items-end w-5/6 md:w-2/6 opacity-1 gap-4 h-fit">
@@ -33,11 +41,11 @@ export default function Card(){
                 <h2 className="flex justify-center my-4">{`type(s): ${details?.types?.map((index: { type: { name: string; }; }) =>index.type.name)}`}</h2>
                 <div className="flex flex-col gap-4">
                 <div className="flex justify-around items-center">
-                    <button className="bg-yellow-200 rounded-md px-3 text-2xl">+</button>
-                    <p>0</p>
-                    <button className="bg-yellow-200 rounded-md px-3.5 text-2xl">-</button>
+                    <button onClick={() => dispatch(increment())} className="bg-yellow-200 rounded-md px-3 text-2xl">+</button>
+                    <p>{counter}</p>
+                    <button onClick={() => dispatch(decrement())} className="bg-yellow-200 rounded-md px-3.5 text-2xl">-</button>
                 </div>
-                <button className="rounded-xl bg-green-500 mb-4">SAVE</button>
+                <button onClick={saveCountOfProduct} className="rounded-xl bg-green-500 mb-8">SAVE</button>
                 </div>
             </div>
    
