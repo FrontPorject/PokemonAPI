@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+      "postinstall": "npm install --legacy-peer-deps"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.5.1",
@@ -16,6 +17,7 @@
     "react-redux": "^9.2.0",
     "react-tilt": "^1.0.2"
   },
+
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@types/node": "^20",
